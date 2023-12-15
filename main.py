@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from rich.console import Console
+import re
 
 console = Console()
 
@@ -21,9 +22,28 @@ class PersonalAssistant:
         self.contacts = []
         self.notes = []
 
+    def is_valid_phone(self, phone):
+        # Перевірка правильності формату номера телефону
+        # Допустимі формати: +380501234567, 050-123-45-67, 0501234567, (050)123-45-67
+        phone_pattern = re.compile(r'^\+?\d{1,3}?[-.\s]?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}$')
+        return bool(re.match(phone_pattern, phone))
+
+    def is_valid_email(self, email):
+        # Перевірка правильності формату електронної пошти
+        email_pattern = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
+        return bool(re.match(email_pattern, email))
+
     def add_contact(self, name, address, phone, email, birthday):
         # Додавання нового контакту
-        pass
+        if not self.is_valid_phone(phone):
+            console.print("[bold red]Помилка:[/bold red] Некоректний номер телефону.")
+            return
+
+        if not self.is_valid_email(email):
+            console.print("[bold red]Помилка:[/bold red] Некоректна електронна пошта.")
+            return
+        
+    
 
     def list_contacts(self):
         # Виведення списку контактів
@@ -74,10 +94,16 @@ class PersonalAssistant:
         pass
 
     def analyze_user_input(self, user_input):
-        # Аналіз введеного тексту користувача та визначення найближчої команди
-        pass
+        if "додати контакт" in user_input.lower():
+            console.print("[green]Пропоную вам додати новий контакт. Використайте команду add_contact.[/green]")
+        elif "список контактів" in user_input.lower():
+            console.print("[green]Для виведення списку контактів використайте команду list_contacts.[/green]")
+        
 
-# Приклад використання
+        else:
+            console.print("[yellow]Не можу розпізнати вашу команду. Спробуйте ще раз.[/yellow]")
+
+
 assistant = PersonalAssistant()
 
 while True:
