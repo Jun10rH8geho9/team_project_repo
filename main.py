@@ -42,16 +42,30 @@ class PersonalAssistant:
         if not self.is_valid_email(email):
             console.print("[bold red]Помилка:[/bold red] Некоректна електронна пошта.")
             return
-        
-    
+
+        new_contact = Contact(name, address, phone, email, birthday)
+        self.contacts.append(new_contact)
+        console.print(f"[green]Контакт {name} успішно доданий до книги контактів.[/green]")
 
     def list_contacts(self):
         # Виведення списку контактів
-        pass
+        for idx, contact in enumerate(self.contacts):
+            console.print(f"[cyan]Контакт #{idx + 1}[/cyan]")
+            console.print(f"Ім'я: {contact.name}")
+            console.print(f"Адреса: {contact.address}")
+            console.print(f"Телефон: {contact.phone}")
+            console.print(f"Електронна пошта: {contact.email}")
+            console.print(f"Дата народження: {contact.birthday}")
+            console.print("-" * 20)
 
     def search_contacts(self, query):
         # Пошук контактів за запитом
-        pass
+        result_contacts = []
+        for contact in self.contacts:
+            if query.lower() in contact.name.lower() or query.lower() in contact.address.lower() \
+                    or query.lower() in contact.phone.lower() or query.lower() in contact.email.lower():
+                result_contacts.append(contact)
+        return result_contacts
 
     def edit_contact(self, contact_index, name, address, phone, email, birthday):
         # Редагування контакту
